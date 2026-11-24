@@ -1,48 +1,100 @@
-<!doctype html>
-<html lang="pt-BR" data-theme="light">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <title>Modelo de Jogo — Jogos VR</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="app">
-      <header class="top">
-        <div>
-          <span class="kicker">Modelo</span>
-          <h1 id="title">Clique no Alvo</h1>
-          <p class="subtitle">Troque este jogo pelo seu. O contrato já está pronto.</p>
-        </div>
-        <button id="restart" class="btn" type="button">Reiniciar</button>
-      </header>
-
-      <main>
-        <div class="hud">
-          <span class="pill">Alvos: <strong id="score">0</strong>/<span id="total">10</span></span>
-          <span class="pill">Tempo: <strong id="timer">0,0s</strong></span>
-        </div>
-
-        <div id="board" class="board" aria-label="Área do jogo">
-          <p id="start-hint" class="start-hint">Clique no alvo para começar</p>
-        </div>
-      </main>
-
-      <footer class="bottom">
-        <p>Este é o arquivo <code>game.js</code>. Leia os comentários e adapte.</p>
-      </footer>
-    </div>
-
-    <div id="result" class="overlay" hidden>
-      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="result-title">
-        <div class="modal-icon" aria-hidden="true">🎯</div>
-        <h2 id="result-title">Muito bem!</h2>
-        <p id="result-text">Você concluiu o jogo.</p>
-        <button id="play-again" class="btn btn-primary full" type="button">Jogar de novo</button>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BioTetris - Classificação dos Vertebrados</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="painel-jogo" aria-label="Área principal do jogo BioTetris">
+    <!-- Cabeçalho com título, informações da partida e botão de tema -->
+    <header class="cabecalho">
+      <div class="titulo-grupo">
+        <h1>BioTetris</h1>
+        <span class="subtitulo">Sistema de Classificação Biológica</span>
       </div>
+      <div class="status-partida" aria-live="polite">
+        <span id="placar-rodada" class="etiqueta">Bloco: 1/10</span>
+        <span id="placar-pontos" class="etiqueta">Acertos: 0</span>
+        <span id="placar-vidas" class="etiqueta vidas" aria-label="Vidas restantes">Vidas: ❤️❤️</span>
+      </div>
+      <button id="botao-tema" class="botao-icone" type="button" aria-label="Alternar tema claro ou escuro">
+        🌓 Tema
+      </button>
+    </header>
+
+    <!-- Tela inicial de instruções -->
+    <section id="tela-inicio" class="tela-sobreposta ativa">
+      <h2>Missão: Classificar Vertebrados</h2>
+      <p>
+        Os espécimes estão caindo na câmara futurista! Mova cada bloco para a coluna certa antes que ele chegue ao fundo.
+      </p>
+      <ul class="regras-lista">
+        <li>Use as setas <strong>◀</strong> e <strong>▶</strong> (ou os botões na tela) para mudar de coluna.</li>
+        <li>Use a seta <strong>▼</strong> (ou o botão Descer) para acelerar a queda.</li>
+        <li>Você precisa de pelo menos <strong>7 acertos</strong> em 10 blocos e tem apenas <strong>2 vidas</strong>!</li>
+      </ul>
+      <button id="botao-iniciar" class="botao-principal" type="button">Iniciar Missão</button>
+    </section>
+
+    <!-- Arena estilo Tetris com 4 colunas -->
+    <section id="arena" class="arena" aria-label="Tabuleiro de queda dos blocos">
+      <!-- Bloco móvel que cai -->
+      <div id="bloco-ativo" class="bloco-animal" role="status" aria-live="polite">
+        <span id="nome-animal">Baleia-azul</span>
+      </div>
+
+      <!-- Grade visual de 4 colunas -->
+      <div class="grade-colunas">
+        <div class="coluna-pista" data-coluna="0"></div>
+        <div class="coluna-pista" data-coluna="1"></div>
+        <div class="coluna-pista" data-coluna="2"></div>
+        <div class="coluna-pista" data-coluna="3"></div>
+      </div>
+
+      <!-- Base com as 4 categorias de vertebrados -->
+      <div class="base-categorias">
+        <div class="categoria-alvo" data-grupo="Mamíferos">
+          <span class="sigla">MAM</span>
+          <span class="nome-grupo">Mamíferos</span>
+        </div>
+        <div class="categoria-alvo" data-grupo="Aves">
+          <span class="sigla">AVE</span>
+          <span class="nome-grupo">Aves</span>
+        </div>
+        <div class="categoria-alvo" data-grupo="Répteis">
+          <span class="sigla">RÉP</span>
+          <span class="nome-grupo">Répteis</span>
+        </div>
+        <div class="categoria-alvo" data-grupo="Anfíbios">
+          <span class="sigla">ANF</span>
+          <span class="nome-grupo">Anfíbios</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Área de resposta rápida (feedback educativo) -->
+    <div id="caixa-feedback" class="caixa-feedback" aria-live="polite">
+      Prepare-se para classificar os animais!
     </div>
 
-    <script src="game.js"></script>
-  </body>
+    <!-- Controles táteis para celular e cliques -->
+    <nav class="controles-tateis" aria-label="Controles do jogo">
+      <button id="btn-esquerda" class="botao-controle" type="button" aria-label="Mover para a esquerda">◀ Esquerda</button>
+      <button id="btn-descer" class="botao-controle destaque" type="button" aria-label="Acelerar queda do bloco">▼ Descer</button>
+      <button id="btn-direita" class="botao-controle" type="button" aria-label="Mover para a direita">Direita ▶</button>
+    </nav>
+
+    <!-- Tela final de vitória ou derrota -->
+    <section id="tela-fim" class="tela-sobreposta" hidden>
+      <h2 id="titulo-fim">Missão Concluída!</h2>
+      <p id="resumo-fim">Você classificou 0 de 10 animais.</p>
+      <p id="detalhe-fim" class="detalhe-fim"></p>
+      <button id="botao-reiniciar" class="botao-principal" type="button">Jogar Novamente</button>
+    </section>
+  </main>
+
+  <script src="game.js"></script>
+</body>
 </html>
